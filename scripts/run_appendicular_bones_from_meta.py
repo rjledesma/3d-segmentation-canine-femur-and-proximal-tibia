@@ -2,10 +2,10 @@ from pathlib import Path
 import subprocess
 import pandas as pd
 
-TOTALSEG_ROOT = Path(r"C:\Users\rjled\Downloads\TotalSegmentator_dataset")
+TOTALSEG_ROOT = Path(r"C:\Users\rjled\Downloads\TotalSegmentator_dataset_v201")
 META_CSV = TOTALSEG_ROOT / "meta.csv"
 
-MAX_CASES_TO_RUN = 20
+MAX_CASES_TO_RUN = 93
 
 KEYWORDS = "leg|lower|knee|tibia"
 

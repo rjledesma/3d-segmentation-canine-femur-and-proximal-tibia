@@ -2,7 +2,7 @@ from pathlib import Path
 import nibabel as nib
 import numpy as np
 
-TOTALSEG_ROOT = Path(r"C:\Users\rjled\Downloads\TotalSegmentator_dataset")
+TOTALSEG_ROOT = Path(r"C:\Users\rjled\Downloads\TotalSegmentator_dataset_v201")
 
 NNUNET_DATASET_DIR = Path(
     r"C:\vscode_windows\thesis\3d-segmentation-femur-tibia\nnunet\data\nnUNet_raw\Dataset002_HumanFemurProximalTibia"
