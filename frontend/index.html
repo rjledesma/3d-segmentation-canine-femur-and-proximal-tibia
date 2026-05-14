@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Femur-Tibia 3D Segmentation System</title>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+
+  <link rel="stylesheet" href="styles.css?v=3" />
+</head>
+
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <h1>Femur-Tibia 3D Segmentation System</h1>
+        <p>Automated 3D segmentation of the human femur and proximal tibia in CT scans</p>
+      </div>
+
+      <div class="status-pill">
+        <span class="status-dot"></span>
+        <span id="statusText">Ready</span>
+      </div>
+    </header>
+
+    <main class="dashboard">
+      <!-- LEFT PANEL -->
+      <aside class="panel left-panel">
+        <section class="card upload-card">
+          <h2>Upload CT Scan</h2>
+          <p class="muted">Supported: DICOM ZIP, NIfTI .nii / .nii.gz</p>
+
+          <label class="drop-zone" id="dropZone">
+            <input
+              type="file"
+              id="fileInput"
+              accept=".nii,.gz,.zip"
+              hidden
+            />
+            <div class="upload-icon">⬆</div>
+            <strong id="fileName">Drop CT file here</strong>
+            <span>or click to browse</span>
+          </label>
+
+          <button class="primary-btn" id="runBtn">Run Segmentation</button>
+
+          <div class="progress-block">
+            <div class="progress-label">
+              <span>Segmentation Progress</span>
+              <span id="progressText">0%</span>
+            </div>
+            <div class="progress-bar">
+              <div id="progressFill"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Case Information</h2>
+
+          <div class="info-row">
+            <span>Case ID</span>
+            <strong id="caseId">No case yet</strong>
+          </div>
+
+          <div class="info-row">
+            <span>Input File</span>
+            <strong id="inputFileName">None</strong>
+          </div>
+
+          <div class="info-row">
+            <span>Input Type</span>
+            <strong id="inputType">N/A</strong>
+          </div>
+
+          <div class="info-row">
+            <span>Model</span>
+            <strong id="modelName">Dataset002 nnU-Net</strong>
+          </div>
+
+          <div class="info-row">
+            <span>Checkpoint</span>
+            <strong id="checkpointName">checkpoint_best.pth</strong>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Validation Scores</h2>
+
+          <div class="score-list">
+            <div>
+              <span>Femur Dice</span>
+              <strong>0.947</strong>
+            </div>
+            <div>
+              <span>Proximal Tibia Dice</span>
+              <strong>0.659</strong>
+            </div>
+            <div>
+              <span>Overall Mean Dice</span>
+              <strong>0.803</strong>
+            </div>
+          </div>
+        </section>
+      </aside>
+
+      <!-- CENTER VIEWER -->
+      <section class="viewer-panel">
+        <div class="viewer-header">
+          <div>
+            <h2>3D Output Viewer</h2>
+            <p>Femur and proximal tibia segmentation preview</p>
+          </div>
+
+          <div class="legend">
+            <span><i class="legend-dot femur"></i> Femur</span>
+            <span><i class="legend-dot tibia"></i> Proximal Tibia</span>
+          </div>
+        </div>
+
+        <div id="threeViewer">
+          <div class="viewer-controls">
+            <button type="button" data-view="full">Full View</button>
+            <button type="button" data-view="femur">Femur</button>
+            <button type="button" data-view="tibia">Proximal Tibia</button>
+            <button type="button" data-view="knee">Knee Region</button>
+          </div>
+        </div>
+
+        <div class="viewer-footer">
+          <span>Patch size: 64 × 288 × 128</span>
+          <span>Configuration: 3d_fullres</span>
+          <span>Fold: 0</span>
+        </div>
+      </section>
+
+      <!-- RIGHT PANEL -->
+      <aside class="panel right-panel">
+        <section class="card preview-card">
+          <h2>CT Preview</h2>
+
+          <div class="slice-box">
+            <div class="fake-slice"></div>
+            <span>Axial CT Slice</span>
+          </div>
+
+          <div class="slice-box">
+            <div class="fake-slice sagittal"></div>
+            <span>Segmentation Overlay</span>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Output Files</h2>
+
+          <div class="file-output">
+            <span>Prediction Mask</span>
+            <a id="predictionMaskLink" href="#" target="_blank">Not available</a>
+          </div>
+
+          <div class="file-output">
+            <span>Femur Mesh</span>
+            <a id="femurStlLink" href="#" target="_blank">Not available</a>
+          </div>
+
+          <div class="file-output">
+            <span>Proximal Tibia Mesh</span>
+            <a id="tibiaStlLink" href="#" target="_blank">Not available</a>
+          </div>
+
+          <button class="secondary-btn" id="downloadResultsBtn" disabled>
+            Download Results
+          </button>
+        </section>
+
+        <section class="card log-card">
+          <h2>Processing Log</h2>
+          <pre id="logBox">System ready.
+Waiting for input scan...</pre>
+        </section>
+      </aside>
+    </main>
+  </div>
+
+  <script type="module" src="three_viewer.js?v=5"></script>
+  <script src="app.js?v=3"></script>
+</body>
+</html>

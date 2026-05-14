@@ -128,11 +128,34 @@ to resume use this params "nnUNetv2_train 2 3d_fullres 0 -tr nnUNetTrainer_300ep
 
 # Mean Validation Dice on VSDFullBody
 2026-05-12 12:01:36.308171: Mean Validation Dice:  0.8029940765249004
+Training done.
+This split has 28 training and 7 validation cases.
+Validation complete
+Mean Validation Dice: 0.8029940765249004
+
 ----------------------------------
 
 
+# APP STRUCTURE
+Top Bar
+Femur-Tibia 3D Segmentation System        Status: Ready
 
+Left Panel
+Upload CT Scan
+Patient / Case Info
+Model Info
+Segmentation Progress
 
+Center Panel
+3D Output Viewer
+Femur + Proximal Tibia model
+
+Right Panel
+Input CT Slices
+Prediction Mask Preview
+Export Results
+
+----------------------------------
 
 
 # TO DOS
@@ -142,3 +165,29 @@ Keep Dataset001_HumanFemur as baseline.
 Build Dataset002_HumanFemurProximalTibia.
 Train a new 300-epoch model on Dataset002.
 Compare baseline vs improved model in your thesis.
+
+----------------------------------
+
+# TESTS
+
+# Backend testing
+http://127.0.0.1:8000/docs
+
+# Front End
+python -m http.server 5500
+
+# Server
+uvicorn app.main:app --reload
+
+----------------------------------
+# Key Observations
+Larger DICOM CT cases takes too long to segment.
+Example:
+Dicom ZIP with 1944 slices, using my GPU RTX 4070 takes 2.8 sec per slice, 1944 × 2.8 sec ≈ 90 minutes
+Solution:
+using crop_service.py automatic cropping
+DICOM ZIP
+→ Convert to NIfTI
+→ Crop lower-limb/knee ROI
+→ Run nnU-Net on cropped NIfTI
+→ Convert mask to STL

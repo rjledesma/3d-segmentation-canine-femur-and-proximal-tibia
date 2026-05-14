@@ -207,7 +207,7 @@ def build_case(ct_path: Path, output_index: int):
     tibia = load_nifti(tibia_path).get_fdata() > 0
 
 
-    if tibia.shape != ct_data.shape:
+    if tibia.shape != ct_data.shape:    
         return None, f"tibia shape mismatch: {source_case}"
     
     
